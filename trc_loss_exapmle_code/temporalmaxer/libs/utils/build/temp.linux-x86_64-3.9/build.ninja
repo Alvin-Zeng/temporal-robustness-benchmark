@@ -1,0 +1,20 @@
+ninja_required_version = 1.3
+cxx = c++
+
+cflags = -pthread -B /mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -O2 -Wall -fPIC -O2 -isystem /mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/include -I/mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/include -fPIC -O2 -isystem /mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/include -fPIC -I/mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/lib/python3.9/site-packages/torch/include -I/mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -I/mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/lib/python3.9/site-packages/torch/include/TH -I/mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/lib/python3.9/site-packages/torch/include/THC -I/mnt/cephfs/home/zengrunhao/anaconda3/envs/xiaoyong-pgcn/include/python3.9 -c
+post_cflags = -fopenmp -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=nms_1d_cpu -D_GLIBCXX_USE_CXX11_ABI=0 -std=c++14
+ldflags = 
+
+rule compile
+  command = $cxx -MMD -MF $out.d $cflags -c $in -o $out $post_cflags
+  depfile = $out.d
+  deps = gcc
+
+
+
+build /mnt/cephfs/dataset/m3lab_data-z/jiaqi/auto_thumos_exp/home/xiaoyong/TemporalMaxer/libs/utils/build/temp.linux-x86_64-3.9/./csrc/nms_cpu.o: compile /mnt/cephfs/dataset/m3lab_data-z/jiaqi/auto_thumos_exp/home/xiaoyong/TemporalMaxer/libs/utils/csrc/nms_cpu.cpp
+
+
+
+
+

@@ -1,0 +1,1 @@
+python ./train.py ./configs/thumos_i3d.yaml --output random1_w_0_3_0_jq

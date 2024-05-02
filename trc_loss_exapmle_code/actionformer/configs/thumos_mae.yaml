@@ -1,0 +1,67 @@
+dataset_name: thumos
+train_split: ['validation']
+val_split: ['test']
+devices: 
+  - cuda:0
+dataset: {
+  json_file: ./annotations/thumos14.json,
+  # feat_folder: /root/autodl-tmp/thumos_feature/videomae_v2/videomae_v2,
+  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features,
+  load_aug_feat: True,
+  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/corrupted_rgb_features/val/blackframe_1frame/features,
+  # augfeat_folder: /root/autodl-tmp/thumos_feature/videomae_v2/random_action_and_background_5_frame_num_1/thumos/i3d_features,
+  file_prefix: ~,
+  file_ext: .npy,
+  num_classes: 20,
+  input_dim: 1408,
+  #2048+768, 1024+768,1280+1024
+  feat_stride: 4,
+  num_frames: 16,
+  # serve as data augmentation
+  trunc_thresh: 0.5,
+  crop_ratio: [0.9, 1.0],
+  max_seq_len: 2304,
+}
+model: {
+  fpn_type: identity,
+  max_buffer_len_factor: 6.0,
+  n_mha_win_size: 19,
+}
+opt: {
+  learning_rate: 0.0001,
+  warmup_epochs: 15,
+  epochs: 45,
+  weight_decay: 0.025,
+}
+loader: {
+  batch_size: 2,
+}
+train_cfg: {
+  init_loss_norm: 100,
+  clip_grad_l2norm: 1.0,
+  cls_prior_prob: 0.01,
+  center_sample: radius,
+  center_sample_radius: 1.5,
+  use_jsdloss: True,
+  jsdloss_weight: 1.2,
+}
+# the inference on THUMOS is quite different from EPIC-kitchens
+# a major performance gain is achieved by fusing external classification scores
+# doing so will require disable multiclass_nms and enable score fusion
+test_cfg: {
+  voting_thresh: 0.7,
+  pre_nms_topk: 2000,
+  max_seg_num: 200,
+  min_score: 0.001,
+  # when using external scores, our model is generating "proposals"
+  # multiclass_nms: False,
+  # ext_score_file: ./data/thumos/annotations/thumos14_cls_scores.pkl,
+  # comment out L47-48 and uncomment L50 to disable score fusion
+  multiclass_nms: True,
+}
+change_test_feat: True
+# test_feat_path: /root/autodl-tmp/thumos_feature/videomae_v2/videomae_v2
+# output_folder: ./ckpt_aug
+test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features
+output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/actionformer/cvpr_checkpoint/ckpt_jsd
+extractor: videoMAE

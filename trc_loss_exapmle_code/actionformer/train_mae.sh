@@ -1,0 +1,1 @@
+python ./train.py ./configs/thumos_mae.yaml --output random1_w_1_2_jq

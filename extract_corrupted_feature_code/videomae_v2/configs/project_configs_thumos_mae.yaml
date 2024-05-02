@@ -1,0 +1,36 @@
+# you should only change the variable with '$$'
+# if you want to add corruptions to the test dataset, you could set:
+# add_noise_unity: percentage,  noise_length: 1 or 5 or 10, process_way: 'mask'(or other corruptions type), sample_way: continuous_in_action, dataset_type: test
+# if you want to add corruptions to the val dataset to use trc loss, you could set:
+# add_noise_unity: frame,  noise_length: 1, process_way: 'mask', sample_way: random_in_action_and_background, dataset_type: val
+
+
+process_configs: {
+  add_noise_unity: percentage, # 'frame' or 'percentage'
+  noise_length: 1, # unity is 'add_noise_unity'
+  sample_way: continuous_in_action, # at the middle of action and continuous
+  process_way: 'mask', # select from ['nothing', 'mask', 'cutout', 'light', 'motion_blur', 'cover']
+  # 'nothing': clean frame        'mask': black frame
+  # 'cutout': packet loss         'light': overexposure
+  # 'motion_blur': motion blur    'cover': occlusion
+
+  dataset_type: test, # 'test' or 'val' 
+  process_type: keep, #'keep' or 'replace'
+
+  feature_process_rate: 4, # select num of feats, nomally set 4
+  add_noise_to_all_action: True, # select one segment in one video or all segments in one video
+  process_annotations_length_threshold: 0
+}
+
+file_root: {
+  output_file_dir: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features_f30_cs12_st4/test, 
+  annotations_input_file_root: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/annotations/thumos14.json, # change to your datase5433233t
+  video_input_dir_test: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/basictad/videos/test, # change to your dataset
+  video_input_dir_val: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/basictad/videos/val,
+  feature_input_dir: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features_f30_cs12_st4/test/features,
+  ckpt_path: ./ckpt/vit_g_hybrid_pt_1200e_k710_ft.pth
+}
+
+frequency: 4 # stride of the two chunks  
+chunk_size: 16 # size of chunk 
+# for I3D feature, frequency = 4, chunk_size = 16

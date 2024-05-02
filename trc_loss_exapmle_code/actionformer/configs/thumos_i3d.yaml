@@ -1,0 +1,59 @@
+dataset_name: thumos
+train_split: ['validation']
+val_split: ['test']
+devices: 
+  - cuda:0
+dataset: {
+  json_file: ./annotations/thumos14.json,
+  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features, # clean input data
+  load_aug_feat: True, # True --> use TRC loss, else, set 'False'
+  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features, # corrupted input data
+  file_prefix: ~,
+  file_ext: .npy,
+  num_classes: 20,
+  input_dim: 1024, # only use RGB feature, not include optical flow feature
+  feat_stride: 4,
+  num_frames: 16,
+  # serve as data augmentation
+  trunc_thresh: 0.5,
+  crop_ratio: [0.9, 1.0],
+  max_seq_len: 2304,
+}
+model: {
+  fpn_type: identity,
+  max_buffer_len_factor: 6.0,
+  n_mha_win_size: 19,
+}
+opt: {
+  learning_rate: 0.0001,
+  warmup_epochs: 13,
+  epochs: 45,
+  weight_decay: 0.03,
+}
+loader: {
+  batch_size: 2,
+}
+train_cfg: {
+  init_loss_norm: 100,
+  clip_grad_l2norm: 1.0,
+  cls_prior_prob: 0.01,
+  center_sample: radius,
+  center_sample_radius: 1.5,
+  use_jsdloss: True,
+  jsdloss_weight: 0.3,
+}
+test_cfg: {
+  voting_thresh: 0.7,
+  pre_nms_topk: 2000,
+  max_seg_num: 200,
+  min_score: 0.001,
+  # when using external scores, our model is generating "proposals"
+  # multiclass_nms: False,
+  # ext_score_file: ./data/thumos/annotations/thumos14_cls_scores.pkl,
+  # comment out L47-48 and uncomment L50 to disable score fusion
+  multiclass_nms: True,
+}
+change_test_feat: True
+test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features
+output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/actionformer/cvpr_checkpoint/ckpt_jsd
+extractor: i3d

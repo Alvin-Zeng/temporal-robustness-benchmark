@@ -1,0 +1,101 @@
+# you should only change the variable with '$$'
+# if you want to add corruptions to the test dataset, you could set:
+# add_noise_unity: percentage,  noise_length: 1 or 5 or 10, process_way: 'mask'(or other corruptions type), sample_way: continuous_in_action, dataset_type: test
+# if you want to add corruptions to the val dataset to use trc loss, you could set:
+# add_noise_unity: frame,  noise_length: 1, process_way: 'mask', sample_way: random_in_action_and_background, dataset_type: val
+
+
+process_configs: {
+##############################################################################################################
+  add_noise_unity: percentage, # 'frame' or 'percentage' $$
+  noise_length: 1, # if length type is fixed, this arg take a role, unity is 'add_noise_unity', select from [1,5,10] $$
+  process_way: 'mask', # 'mask' or 'mixup' or 'nothing' or 'cutout' or'light' or 'motion_blur' or 'cover' $$
+  # 'nothing': clean frame        'mask': black frame
+  # 'cutout': packet loss         'light': overexposure
+  # 'motion_blur': motion blur    'cover': occlusion
+
+  sample_way: continuous_in_action, # $$
+  # interval or continuous or random_in_action
+  # ['interval_in_action', 'continuous_in_action', 
+  # 'random_in_action', 'random_in_background', 'random_in_action_and_background',
+  # 'continuous_in_background', 'continuous_in_action_and_background']
+  
+  dataset_type: test, # 'test' or 'val' $$
+################################################################################################################
+  process_type: keep, # 'keep' or 'replace', 'keep' means extract clean features, 'replace' means extract corrupted features $$
+
+  # length variable
+  noise_length_type: fixed, # fixed or variable
+  noise_length_min: 1,  # if length type is variable, this arg take a role
+  noise_length_max: 10, # if length type is variable, this arg take a role
+  noise_length_change-step: 4, # if length type is variable, this arg take a role
+  # position_at_segment
+  noise_position_at_segment_type: fixed, # fixed or variable
+  noise_position_at_segment_start: 80, # if position_at_segment_type is variable, this arg take a role
+  noise_position_at_segment_end: 91, # if position_at_segment_type is variable, this arg take a role
+  noise_position_at_segment_step: 10, # if position_at_segment_type is variable, this arg take a role
+
+  # process image
+  mixup_weight_is_fixed: False, # otherwise, it will use numpy.random.beta(alpha, alpha), and alpah set 0.5
+  mixup_weight: 0.5,
+
+  # general config
+  add_noise_to_all_action: True, # select one segment in one video or all segments in one video
+  noise_position_at_video: 50, # if add_noise_to_all_action is false, this arg take a role, it means the position of segment in the video
+  rgb_only: True, # can only support 'True' in this project
+  process_annotations_length_threshold: 0,
+  noise_position_at_segment: 50, # if position_at_segment_type is fixed, this arg take a role
+}
+file_root: {
+  output_file_dir: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/CASE/i3d/rgb_features_f30_cs12_st4/test, # change to the output_feature path $$
+  annotations_input_file_root: /mnt/cephfs/dataset/xiaoyong/thumos14_feature/data_old/thumos/annotations/thumos14.json, # change to your dataset $$
+  test_img_input_dir: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/opentad-data/thumos-14/raw_data/img_340_256, # change to your dataset $$
+  val_img_input_dir: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/opentad-data/thumos-14/raw_data/img_340_256, # change to your dataset $$
+}
+extract_feat_args: {
+  mode: rgb # can only support 'True' in this project
+}
+
+model: {
+  model_name: actionformer, # [actionformer, temporalmaxer, pgcn, tridet] $$
+  temporalmaxer: {
+    i3d_frequency: 4, # stride of the two chunks 
+    i3d_chunk_size: 16, # size of chunk
+    sample_mode: oversample, # follow pervious work
+    load_model: ./models/i3d/rgb_imagenet_actionformer.pt, # choose your i3d model
+    batch_size: 4, # batch size when extract feature
+    feat_input_dir: ccc/xxx, # $$change to your path_of_input_feature
+  },
+  actionformer: {
+    i3d_frequency: 4, # stride of the two chunks 
+    i3d_chunk_size: 16, # size of chunk
+    sample_mode: oversample, # follow pervious work
+    load_model: ./models/i3d/rgb_imagenet_actionformer.pt, # choose your i3d model
+    batch_size: 4, # batch size when extract feature
+    feat_input_dir: xxx/i3d/rgb_features_f30_cs12_st4/test/features, # $$
+  },
+  tridet: {
+    i3d_frequency: 4, # stride of the two chunks 
+    i3d_chunk_size: 16, # size of chunk
+    sample_mode: oversample, # follow pervious work
+    load_model: ./models/i3d/rgb_imagenet_actionformer.pt, # choose your i3d model
+    batch_size: 4, # batch size when extract feature
+    feat_input_dir: xxx/dataset/xxx/thumos14_feature/xxx, # $$
+  },
+  pgcn: {
+    i3d_frequency: 8,
+    i3d_chunk_size: 64,
+    sample_mode: center_crop, 
+    load_model: models/i3d/model_rgb.pth, 
+    batch_size: 2, 
+    feat_input_dir: /mnt/cephfs/dataset/xiaoyong/thumos14_feature/my_pgcn_feature, # $$ 
+  },
+  vsgn: {
+    i3d_frequency: 16,
+    i3d_chunk_size: 16,
+    sample_mode: center_crop, 
+    load_model: models/i3d/model_rgb.pth, 
+    batch_size: 2, 
+    feat_input_dir: /root/autodl-tmp/datasets/Anet_1.3_clean/i3d_features, # $$ 
+  }
+}
