@@ -17,7 +17,9 @@ The code includes:
 
 ## Installation
 
-- Read INSTALL.md for installing necessary dependencies.
+- Read [INSTALL.md](./INSTALL.md) for installing necessary dependencies.
+
+
 
 ## Quick Start
 
@@ -32,8 +34,6 @@ For I3D features on the Thumos dataset, run the command: `python main.py`
 For videomaev2 features on the Thumos dataset, run the command: `python extract_tad_feature_thumos.py`
 
 For [ActionFormer](https://github.com/happyharrycn/actionformer_release), [TriDet](https://github.com/dingfengshi/tridet) and [TemporalMaxer](https://github.com/TuanTNG/TemporalMaxer), the command for running the code is consistent with the instructions provided by the original author. Please refer to the GitHub instructions of the original author for details.
-
-
 
 ## Citation
 
