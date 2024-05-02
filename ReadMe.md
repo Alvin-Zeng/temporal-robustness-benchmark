@@ -25,8 +25,6 @@ The code includes:
 
 Before running the code, you need to modify the configuration file. For both extracting features and running the TRC loss example code, specific instructions for modifying the configuration file are provided at the beginning of each config file. Parameters that have `$$` in the comments need to be reset, while other parameters can be kept at their default values.
 
-
-
 ### Run the code
 
 For I3D features on the Thumos dataset, run the command: `python main.py`
@@ -35,3 +33,17 @@ For videomaev2 features on the Thumos dataset, run the command: `python extract_
 
 For [ActionFormer](https://github.com/happyharrycn/actionformer_release), [TriDet](https://github.com/dingfengshi/tridet) and [TemporalMaxer](https://github.com/TuanTNG/TemporalMaxer), the command for running the code is consistent with the instructions provided by the original author. Please refer to the GitHub instructions of the original author for details.
 
+
+
+## Citation
+
+Please cite the paper in your publications if it helps your research:
+
+```latex
+@article{zeng2024benchmarking,
+  title={Benchmarking the Robustness of Temporal Action Detection Models Against Temporal Corruptions},
+  author={Zeng, Runhao and Chen, Xiaoyong and Liang, Jiaming and Wu, Huisi and Cao, Guangzhong and Guo, Yong},
+  journal={arXiv preprint arXiv:2403.20254},
+  year={2024}
+}
+```
