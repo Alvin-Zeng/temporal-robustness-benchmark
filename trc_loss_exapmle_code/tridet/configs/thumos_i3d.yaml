@@ -1,3 +1,9 @@
+# you could just change the variable with '$$'
+# feat_folder is the input clean data to train model
+# augfeat_folder is the input corrupted data to train model
+# test_feat_path is the input data to test model
+# output_folder is the output path to save ckpt
+
 dataset_name: thumos
 train_split: [ 'validation' ]
 val_split: [ 'test' ]
@@ -5,11 +11,9 @@ devices:
   - cuda:0 ##这里指定gpu
 dataset: {
   json_file: ./annotations/thumos14.json,
-  # json_file: annotations/thumos14_10fps.json,
-  # feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features, ## 训练时使用的干净特征路径
-  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features,
-  load_aug_feat: False, ##只有训练的时候是True,测试的时候是False，用来决定训练时是否需要加载加噪特征
-  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features, ##训练时使用的加噪特征路径
+  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features, # $$ clean input (val) data
+  load_aug_feat: True, ##只有训练的时候是True,测试的时候是False，用来决定训练时是否需要加载加噪特征
+  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features,  # $$ corrupted input data
   file_prefix: ~,
   file_ext: .npy,
   num_classes: 20,
@@ -49,12 +53,12 @@ train_cfg: {
   cls_prior_prob: 0.01,
   center_sample: radius,
   center_sample_radius: 1.5,
-  use_jsdloss: False, #选择是否加上论文中的loss
-  loss_type: none, ##选择loss的类型
+  use_jsdloss: True, #选择是否加上论文中的loss
+  loss_type: jsd, ## loss type, select from [jsd, kld, mse, none]
   jsd_loss_weight: 1.3, 
   kld_loss_weight: 1.5,
   mse_loss_weight: 1.0,
-  sample_way: center_sample, ##计算TRCloss的位置
+  sample_way: center_sample, # 'center_sample' 'whole' 'both'
 }
 # the inference on THUMOS is quite different from EPIC-kitchens
 # a major performance gain is achieved by fusing external classification scores
@@ -66,9 +70,9 @@ test_cfg: {
   min_score: 0.001,
   multiclass_nms: True,
 }
-##这一部分可以在脚本文件中thumos_i3d_eval.sh中指定，也可以在这里指定，这里优先级低一点
+## 这一部分可以在脚本文件中thumos_i3d_eval.sh中指定，也可以在这里指定，这里优先级低一点
 change_test_feat: True
-test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features
-output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/tridet/cvpr_checkpoint/ckpt_aug
+test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features # $$ input test feature
+output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/tridet/cvpr_checkpoint/ckpt_aug # $$ output model folder
 extractor: i3d
 

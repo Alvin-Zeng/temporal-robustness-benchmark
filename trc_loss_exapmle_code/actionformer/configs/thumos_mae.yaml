@@ -1,3 +1,9 @@
+# you could just change the variable with '$$'
+# feat_folder is the input clean data to train model
+# augfeat_folder is the input corrupted data to train model
+# test_feat_path is the input data to test model
+# output_folder is the output path to save ckpt
+
 dataset_name: thumos
 train_split: ['validation']
 val_split: ['test']
@@ -5,11 +11,9 @@ devices:
   - cuda:0
 dataset: {
   json_file: ./annotations/thumos14.json,
-  # feat_folder: /root/autodl-tmp/thumos_feature/videomae_v2/videomae_v2,
-  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features,
+  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features, # $$ clean input (val) data
   load_aug_feat: True,
-  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/corrupted_rgb_features/val/blackframe_1frame/features,
-  # augfeat_folder: /root/autodl-tmp/thumos_feature/videomae_v2/random_action_and_background_5_frame_num_1/thumos/i3d_features,
+  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/corrupted_rgb_features/val/blackframe_1frame/features, # $$ corrupted input data
   file_prefix: ~,
   file_ext: .npy,
   num_classes: 20,
@@ -59,9 +63,7 @@ test_cfg: {
   # comment out L47-48 and uncomment L50 to disable score fusion
   multiclass_nms: True,
 }
-change_test_feat: True
-# test_feat_path: /root/autodl-tmp/thumos_feature/videomae_v2/videomae_v2
-# output_folder: ./ckpt_aug
-test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features
-output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/actionformer/cvpr_checkpoint/ckpt_jsd
+change_test_feat: True # if set 'False', test path is 'feat_folder', if 'True', use 'test_feat_path'
+test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/videomae_v2/rgb_features # $$ input test feature
+output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/actionformer/cvpr_checkpoint/ckpt_jsd # $$ output model folder
 extractor: videoMAE

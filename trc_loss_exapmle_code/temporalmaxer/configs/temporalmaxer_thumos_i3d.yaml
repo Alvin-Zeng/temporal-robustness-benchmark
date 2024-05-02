@@ -1,3 +1,9 @@
+# you could just change the variable with '$$'
+# feat_folder is the input clean data to train model
+# augfeat_folder is the input corrupted data to train model
+# test_feat_path is the input data to test model
+# output_folder is the output path to save ckpt
+
 model_name: "TemporalMaxerArchitecture"
 dataset_name: thumos
 train_split: ['validation']
@@ -5,10 +11,10 @@ val_split: ['test']
 devices: 
   - cuda:0
 dataset: {
-  json_file: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/auto_thumos_exp/home/xiaoyong/TemporalMaxer/annotations/thumos14.json,
-  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features,
-  load_aug_feat: True,
-  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features,
+  json_file: ./annotations/thumos14.json,
+  feat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features, # $$ clean input (val) data
+  load_aug_feat: True, # True --> use TRC loss, else, set 'False'
+  augfeat_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/corrupted_rgb_features/val/blackframe_1frame/features, # $$ corrupted input data
   file_prefix: ~,
   file_ext: .npy,
   num_classes: 20,
@@ -61,6 +67,6 @@ test_cfg: {
   # comment out L47-48 and uncomment L50 to disable score fusion
   multiclass_nms: True,
 }
-change_test_feat: True
-test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features
-output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/temporalmaxer/cvpr_checkpoint/ckpt_jsd
+change_test_feat: True # if set 'False', test path is 'feat_folder', if 'True', use 'test_feat_path'
+test_feat_path: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/data/thumos/actionformer/i3d/rgb_features # $$ input test feature
+output_folder: /mnt/cephfs/dataset/m3lab_data-z/jiaqi/exp/temporalmaxer/cvpr_checkpoint/ckpt_jsd # $$ output model folder
