@@ -19,8 +19,6 @@ The code includes:
 
 - Read [INSTALL.md](./INSTALL.md) for installing necessary dependencies.
 
-
-
 ## Quick Start
 
 ### Modify the configuration file
@@ -33,17 +31,19 @@ For I3D features on the Thumos dataset, run the command: `python main.py`
 
 For videomaev2 features on the Thumos dataset, run the command: `python extract_tad_feature_thumos.py`
 
-For [ActionFormer](https://github.com/happyharrycn/actionformer_release), [TriDet](https://github.com/dingfengshi/tridet) and [TemporalMaxer](https://github.com/TuanTNG/TemporalMaxer), the command for running the code is consistent with the instructions provided by the original author. Please refer to the GitHub instructions of the original author for details.
+For [ActionFormer](https://github.com/happyharrycn/actionformer_release), [TriDet](https://github.com/dingfengshi/tridet) and [TemporalMaxer](https://github.com/TuanTNG/TemporalMaxer), the command for running the code is consistent with the instructions provided by the original author. Please refer to the GitHub instructions of the original author for details.
+
+
 
 ## Citation
 
 Please cite the paper in your publications if it helps your research:
 
 ```latex
-@article{zeng2024benchmarking,
+@inproceedings{zeng2024benchmarking,
   title={Benchmarking the Robustness of Temporal Action Detection Models Against Temporal Corruptions},
   author={Zeng, Runhao and Chen, Xiaoyong and Liang, Jiaming and Wu, Huisi and Cao, Guangzhong and Guo, Yong},
-  journal={arXiv preprint arXiv:2403.20254},
-  year={2024}
+  booktitle={IEEE Conference on Computer Vision and Pattern Recognition},
+  year={2024},
 }
 ```
